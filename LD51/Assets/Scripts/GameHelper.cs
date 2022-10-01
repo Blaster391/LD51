@@ -47,7 +47,7 @@ public static class GameHelper
             CharacterHealth hitCharacterHealth = hit.collider.GetComponentInParent<CharacterHealth>();
             if(hitCharacterHealth != null)
             {
-                if(hitCharacterHealth.gameObject == fromCharacterHealth)
+                if(hitCharacterHealth == fromCharacterHealth)
                 {
                     continue;
                 }

@@ -43,6 +43,9 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private GameObject m_bulletLineRenderer = null;
 
+    [SerializeField]
+    private Weapon m_startingWeapon = null;
+
     private Rigidbody2D m_rigidbody2D = null;
     private CapsuleCollider2D m_capsuleCollider2D = null;
     private BaseControls m_controls = null;
@@ -63,6 +66,20 @@ public class CharacterController : MonoBehaviour
         m_capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         m_controls = GetComponent<BaseControls>();
         m_gameStateManager = GameHelper.GetManager<GameStateManager>();
+
+        if(m_startingWeapon != null)
+        {
+            m_equippedWeapon = m_startingWeapon;
+
+            m_arm1.GetComponent<Joint2D>().enabled = false;
+            m_hand1.GetComponent<Joint2D>().enabled = false;
+
+            if (m_equippedWeapon.IsTwoHanded())
+            {
+                m_arm2.GetComponent<Joint2D>().enabled = false;
+                m_hand2.GetComponent<Joint2D>().enabled = false;
+            }
+        }
     }
 
     // Update is called once per frame

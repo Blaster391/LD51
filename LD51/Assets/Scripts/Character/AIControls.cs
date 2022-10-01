@@ -57,7 +57,12 @@ public class AIControls : BaseControls
             return;
         }
 
-        if(m_health.GetHealth() <= 0)
+        m_movement = 0.0f;
+        m_jump = false;
+        m_shoot = false;
+        m_throw = false;
+
+        if (m_health.GetHealth() <= 0)
         {
             Enter_Dead();
             return;
