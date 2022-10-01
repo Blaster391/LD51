@@ -51,6 +51,10 @@ public class UIManager : MonoBehaviour
         {
             m_timeRemaining.text = m_gameStateManager.TimeRemaining.ToString();
         }
+        else
+        {
+            m_timeRemaining.gameObject.SetActive(false);
+        }    
         
         int bulletCount = m_playerController != null ? m_playerController.GetBulletCount() : 0;
         if (m_bullets.Count != bulletCount)

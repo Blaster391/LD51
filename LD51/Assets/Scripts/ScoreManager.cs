@@ -26,7 +26,7 @@ public class ScoreManager : MonoBehaviour
 
     public int GetScore()
     {
-        float totalScore = (m_stateManager.Score * 1000.0f) / m_stateManager.TimeInLevel;
+        float totalScore = (m_stateManager.Score * 100.0f) / m_stateManager.TimeInLevel;
         return Mathf.RoundToInt(totalScore);
     }
 

@@ -30,6 +30,7 @@ public static class GameHelper
         RaycastHit2D[] results = new RaycastHit2D[10];
         var raycastHit = Physics2D.Raycast(from.transform.position, direction, filter, results);
 
+        CharacterHealth toCharacterHealth = to.GetComponentInParent<CharacterHealth>();
         CharacterHealth fromCharacterHealth = from.GetComponentInParent<CharacterHealth>();
 
         foreach (var hit in results)
@@ -47,12 +48,10 @@ public static class GameHelper
             CharacterHealth hitCharacterHealth = hit.collider.GetComponentInParent<CharacterHealth>();
             if(hitCharacterHealth != null)
             {
-                if(hitCharacterHealth == fromCharacterHealth)
+                if(hitCharacterHealth == toCharacterHealth)
                 {
-                    continue;
+                    return true;
                 }
-
-                return (hitCharacterHealth.gameObject == to);
             }
         }
 
