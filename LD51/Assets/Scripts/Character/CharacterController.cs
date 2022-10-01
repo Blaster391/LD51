@@ -41,6 +41,7 @@ public class CharacterController : MonoBehaviour
     private Rigidbody2D m_rigidbody2D = null;
     private CapsuleCollider2D m_capsuleCollider2D = null;
     private BaseControls m_controls = null;
+    private CharacterHealth m_health = null;
 
     private RaycastHit2D m_lastGroundHit;
     private bool m_isGrounded = true;
@@ -48,6 +49,7 @@ public class CharacterController : MonoBehaviour
 
     void Start()
     {
+        m_health = GetComponentInParent<CharacterHealth>();
         m_rigidbody2D = GetComponent<Rigidbody2D>();
         m_capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         m_controls = GetComponent<BaseControls>();
@@ -56,6 +58,11 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!m_health.IsAlive())
+        {
+            return;
+        }
+
         DoGroundCast();
 
         float horiz = m_controls.GetMovement();
@@ -105,7 +112,6 @@ public class CharacterController : MonoBehaviour
         Vector2 myPosition = transform.position;
         var directionToTarget = m_controls.GetTargetPosition() - myPosition;
         directionToTarget.Normalize();
-
         var angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
 
         m_itemHolder.transform.position = myPosition + directionToTarget * m_weaponHoldDistance + m_weaponHoldOffset;
@@ -117,6 +123,37 @@ public class CharacterController : MonoBehaviour
         m_hand1.transform.rotation = Quaternion.AngleAxis(angle + 90.0f, Vector3.forward);
 
         m_character.transform.position = transform.position;
+
+        if (m_controls.GetThrow())
+        {
+
+        }
+
+        if (m_controls.GetShoot())
+        {
+            Vector2 weaponPosition = m_itemHolder.transform.position;
+            ContactFilter2D filter = new ContactFilter2D();
+            RaycastHit2D[] results = new RaycastHit2D[10];
+            var raycastHit = Physics2D.Raycast(weaponPosition, directionToTarget, filter, results);
+
+            foreach(var hit in results)
+            {
+                if(hit.collider == null ||  hit.collider.gameObject.layer == 10)
+                {
+                    break;
+                }
+
+                CharacterHealth hitCharacterHealth = hit.collider.GetComponentInParent<CharacterHealth>();
+                Limb hitLimb = hit.collider.GetComponent<Limb>();
+                if (hitLimb != null && hitCharacterHealth != null && hitCharacterHealth != m_health)
+                {
+
+                    hitCharacterHealth.TakeDamage(hitLimb, directionToTarget, hit.point, 10.0f); 
+                    break;
+                }
+            }
+        }
+
     }
 
     private void DoGroundCast()
@@ -131,5 +168,10 @@ public class CharacterController : MonoBehaviour
             m_isGrounded = (m_rigidbody2D.position.y - hit.point.y) <= (capsuleBounds.extents.y + m_groundedEpsilon);
             break;
         }
+    }
+
+    public void OnDeath()
+    {
+
     }
 }
