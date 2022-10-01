@@ -1239,7 +1239,8 @@ MonoBehaviour:
   m_hand2: {fileID: 982502697549002859}
   m_baseMovementForce: 25
   m_baseJumpForce: 10
-  m_weaponHoldDistance: 0.5
+  m_weaponHoldDistance: 0.7
+  m_throwForce: 10
   m_airDampening: 0.1
   m_groundedEpsilon: 0.25
   m_weaponHoldOffset: {x: 0, y: 0.15}

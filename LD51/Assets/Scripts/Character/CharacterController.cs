@@ -27,6 +27,8 @@ public class CharacterController : MonoBehaviour
     private float m_baseJumpForce = 1.0f;
     [SerializeField]
     private float m_weaponHoldDistance = 1.0f;
+    [SerializeField]
+    private float m_throwForce = 10.0f;
 
     [Range(0.0f, 1.0f)]
     [SerializeField]
@@ -47,6 +49,9 @@ public class CharacterController : MonoBehaviour
     private bool m_isGrounded = true;
     private int m_movingDirection = 0;
 
+    private Weapon m_equippedWeapon;
+    private Weapon m_groundWeapon;
+
     void Start()
     {
         m_health = GetComponentInParent<CharacterHealth>();
@@ -58,7 +63,7 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!m_health.IsAlive())
+        if (!m_health.IsAlive())
         {
             return;
         }
@@ -69,9 +74,9 @@ public class CharacterController : MonoBehaviour
         float damp = m_isGrounded ? 1.0f : m_airDampening;
         m_rigidbody2D.AddForce(Vector2.right * m_baseMovementForce * horiz * damp * Time.deltaTime * 60);
 
-        if(Mathf.Abs(horiz) < 0.1f)
+        if (Mathf.Abs(horiz) < 0.1f)
         {
-            if(m_movingDirection != 0)
+            if (m_movingDirection != 0)
             {
                 m_animator.Play("Idle");
                 m_movingDirection = 0;
@@ -80,7 +85,7 @@ public class CharacterController : MonoBehaviour
         }
         else
         {
-            if(horiz > 0.1f)
+            if (horiz > 0.1f)
             {
                 if (m_movingDirection != 1)
                 {
@@ -109,52 +114,143 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        Vector2 myPosition = transform.position;
-        var directionToTarget = m_controls.GetTargetPosition() - myPosition;
-        directionToTarget.Normalize();
-        var angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
-
-        m_itemHolder.transform.position = myPosition + directionToTarget * m_weaponHoldDistance + m_weaponHoldOffset;
-
-        m_arm1.transform.position = myPosition + directionToTarget * m_weaponHoldDistance * 0.4f + m_weaponHoldOffset;
-        m_arm1.transform.rotation = Quaternion.AngleAxis(angle + 90.0f, Vector3.forward);
-
-        m_hand1.transform.position = m_itemHolder.transform.position;
-        m_hand1.transform.rotation = Quaternion.AngleAxis(angle + 90.0f, Vector3.forward);
-
         m_character.transform.position = transform.position;
 
-        if (m_controls.GetThrow())
+        if (m_equippedWeapon != null)
         {
+            Vector2 myPosition = transform.position;
+            var directionToTarget = m_controls.GetTargetPosition() - myPosition;
+            directionToTarget.Normalize();
+            var angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
+            if(angle < 0.0f)
+            {
+                angle += 360.0f;
+            }
+
+            m_itemHolder.transform.position = myPosition + directionToTarget * m_weaponHoldDistance + m_weaponHoldOffset;
+            m_equippedWeapon.transform.position = m_itemHolder.transform.position;
+            m_equippedWeapon.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            m_equippedWeapon.GetComponent<SpriteRenderer>().flipY = (angle < 270.0f && angle > 90.0f);
+
+            m_arm1.transform.position = myPosition + directionToTarget * m_weaponHoldDistance * 0.35f + m_weaponHoldOffset;
+            m_arm1.transform.rotation = Quaternion.AngleAxis(angle + 90.0f, Vector3.forward);
+
+            m_hand1.transform.position = myPosition + directionToTarget * m_weaponHoldDistance * 0.8f + m_weaponHoldOffset;
+            m_hand1.transform.rotation = Quaternion.AngleAxis(angle + 90.0f, Vector3.forward);
+
+            if(m_equippedWeapon.IsTwoHanded())
+            {
+                m_arm2.transform.position = myPosition + directionToTarget * m_weaponHoldDistance * 0.35f + m_weaponHoldOffset;
+                m_arm2.transform.rotation = Quaternion.AngleAxis(angle + 90.0f, Vector3.forward);
+
+                m_hand2.transform.position = myPosition + directionToTarget * m_weaponHoldDistance * 0.8f + m_weaponHoldOffset;
+                m_hand2.transform.rotation = Quaternion.AngleAxis(angle + 90.0f, Vector3.forward);
+            }
+
+            if (m_controls.GetThrow())
+            {
+                TryThrow();
+            }
+
+            if (m_controls.GetShoot())
+            {
+                TryShoot();
+            }
 
         }
-
-        if (m_controls.GetShoot())
+        else
         {
-            Vector2 weaponPosition = m_itemHolder.transform.position;
-            ContactFilter2D filter = new ContactFilter2D();
-            RaycastHit2D[] results = new RaycastHit2D[10];
-            var raycastHit = Physics2D.Raycast(weaponPosition, directionToTarget, filter, results);
-
-            foreach(var hit in results)
+            if (m_controls.GetShoot())
             {
-                if(hit.collider == null ||  hit.collider.gameObject.layer == 10)
-                {
-                    break;
-                }
+                TryPickup();
+            }
+        }
+    }
 
-                CharacterHealth hitCharacterHealth = hit.collider.GetComponentInParent<CharacterHealth>();
-                Limb hitLimb = hit.collider.GetComponent<Limb>();
-                if (hitLimb != null && hitCharacterHealth != null && hitCharacterHealth != m_health)
-                {
+    private void TryShoot()
+    {
+        if(m_equippedWeapon == null || m_equippedWeapon.GetAmmo() <= 0)
+        {
+            return;
+        }
 
-                    hitCharacterHealth.TakeDamage(hitLimb, directionToTarget, hit.point, 10.0f); 
-                    break;
-                }
+        Vector2 weaponPosition = m_equippedWeapon.GetFiringPoint();
+        var directionToTarget = m_controls.GetTargetPosition() - weaponPosition;
+        
+        ContactFilter2D filter = new ContactFilter2D();
+        RaycastHit2D[] results = new RaycastHit2D[10];
+        var raycastHit = Physics2D.Raycast(weaponPosition, directionToTarget, filter, results);
+
+        foreach (var hit in results)
+        {
+            if (hit.collider == null || hit.collider.gameObject.layer == 10)
+            {
+                break;
+            }
+
+            CharacterHealth hitCharacterHealth = hit.collider.GetComponentInParent<CharacterHealth>();
+            Limb hitLimb = hit.collider.GetComponent<Limb>();
+            if (hitLimb != null && hitCharacterHealth != null && hitCharacterHealth != m_health)
+            {
+
+                hitCharacterHealth.TakeDamage(hitLimb, directionToTarget, hit.point, 10.0f);
+                break;
             }
         }
 
+        m_equippedWeapon.FireWeapon();
     }
+
+    private void TryPickup()
+    {
+        if (m_equippedWeapon != null)
+        {
+            return;
+        }
+
+        if (m_groundWeapon == null)
+        {
+            return;
+        }
+
+        m_equippedWeapon = m_groundWeapon;
+
+        m_arm1.GetComponent<Joint2D>().enabled = false;
+        m_hand1.GetComponent<Joint2D>().enabled = false;
+
+        if (m_equippedWeapon.IsTwoHanded())
+        {
+            m_arm2.GetComponent<Joint2D>().enabled = false;
+            m_hand2.GetComponent<Joint2D>().enabled = false;
+        }
+    }
+
+    private void TryThrow()
+    {
+        if (m_equippedWeapon == null)
+        {
+            return;
+        }
+
+        m_equippedWeapon.Throw(m_health.gameObject);
+
+        m_arm1.GetComponent<Joint2D>().enabled = true;
+        m_arm2.GetComponent<Joint2D>().enabled = true;
+
+        m_hand1.GetComponent<Joint2D>().enabled = true;
+        m_hand2.GetComponent<Joint2D>().enabled = true;
+
+        Vector2 weaponPosition = m_itemHolder.transform.position;
+        var directionToTarget = m_controls.GetTargetPosition() - weaponPosition;
+        directionToTarget.Normalize();
+
+        Vector2 upwardsForce = Vector2.up * m_throwForce;
+
+        m_equippedWeapon.GetComponent<Rigidbody2D>().AddForce(directionToTarget * m_throwForce + upwardsForce, ForceMode2D.Impulse);
+
+        m_equippedWeapon = null;
+    }
+
 
     private void DoGroundCast()
     {
@@ -162,16 +258,32 @@ public class CharacterController : MonoBehaviour
         RaycastHit2D[] hits = Physics2D.CircleCastAll(m_rigidbody2D.position, capsuleBounds.extents.x * 0.9f, Vector2.down);
         foreach (var hit in hits)
         {
+
             if (hit.collider.gameObject.layer != 10) continue;
 
             m_lastGroundHit = hit;
             m_isGrounded = (m_rigidbody2D.position.y - hit.point.y) <= (capsuleBounds.extents.y + m_groundedEpsilon);
             break;
         }
+
+        m_groundWeapon = null;
+        hits = Physics2D.CircleCastAll(m_rigidbody2D.position, capsuleBounds.extents.x * 2.5f, Vector2.down);
+        foreach (var hit in hits)
+        {
+            if (hit.collider.gameObject.layer == 11)
+            {
+                m_groundWeapon = hit.collider.gameObject.GetComponent<Weapon>();
+                break;
+            }
+        }
     }
 
     public void OnDeath()
     {
+        m_arm1.GetComponent<Joint2D>().enabled = true;
+        m_arm2.GetComponent<Joint2D>().enabled = true;
 
+        m_hand1.GetComponent<Joint2D>().enabled = true;
+        m_hand2.GetComponent<Joint2D>().enabled = true;
     }
 }
