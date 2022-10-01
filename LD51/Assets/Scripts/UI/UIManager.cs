@@ -51,8 +51,8 @@ public class UIManager : MonoBehaviour
         {
             m_timeRemaining.text = m_gameStateManager.TimeRemaining.ToString();
         }
-
-        int bulletCount = m_playerController.GetBulletCount();
+        
+        int bulletCount = m_playerController != null ? m_playerController.GetBulletCount() : 0;
         if (m_bullets.Count != bulletCount)
         {
             while(m_bullets.Count > 0)
@@ -69,7 +69,7 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        int healthCount = m_playerHealth.GetHealth();
+        int healthCount = m_playerController != null ? m_playerHealth.GetHealth() : 0;
         if (m_health.Count != healthCount)
         {
             while (m_health.Count > 0)

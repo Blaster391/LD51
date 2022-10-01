@@ -25,16 +25,38 @@ public static class GameHelper
         Vector2 fromPosition2D = from.transform.position;
         Vector2 toPosition2D = to.transform.position;
         Vector2 direction = toPosition2D - fromPosition2D;
-        float distance = (fromPosition2D - toPosition2D).magnitude;
-        RaycastHit2D result = Physics2D.Raycast(fromPosition2D, direction, distance, layerMask);
-        if (result)
+
+        ContactFilter2D filter = new ContactFilter2D();
+        RaycastHit2D[] results = new RaycastHit2D[10];
+        var raycastHit = Physics2D.Raycast(from.transform.position, direction, filter, results);
+
+        CharacterHealth fromCharacterHealth = from.GetComponentInParent<CharacterHealth>();
+
+        foreach (var hit in results)
         {
-            return (result.collider.gameObject == to);
+            if (hit.collider == null)
+            {
+                break;
+            }
+
+            if (hit.collider.gameObject.layer == 10)
+            {
+                break;
+            }
+
+            CharacterHealth hitCharacterHealth = hit.collider.GetComponentInParent<CharacterHealth>();
+            if(hitCharacterHealth != null)
+            {
+                if(hitCharacterHealth.gameObject == fromCharacterHealth)
+                {
+                    continue;
+                }
+
+                return (hitCharacterHealth.gameObject == to);
+            }
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 
     public static bool HasLineOfSight(GameObject from, Vector2 to)

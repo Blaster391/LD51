@@ -47,6 +47,7 @@ public class CharacterController : MonoBehaviour
     private CapsuleCollider2D m_capsuleCollider2D = null;
     private BaseControls m_controls = null;
     private CharacterHealth m_health = null;
+    private GameStateManager m_gameStateManager = null;
 
     private RaycastHit2D m_lastGroundHit;
     private bool m_isGrounded = true;
@@ -61,12 +62,18 @@ public class CharacterController : MonoBehaviour
         m_rigidbody2D = GetComponent<Rigidbody2D>();
         m_capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         m_controls = GetComponent<BaseControls>();
+        m_gameStateManager = GameHelper.GetManager<GameStateManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (!m_health.IsAlive())
+        {
+            return;
+        }
+
+        if(!m_gameStateManager.GameActive && m_health.IsPlayer())
         {
             return;
         }

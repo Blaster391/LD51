@@ -31,6 +31,14 @@ public class GameStateManager : MonoBehaviour
     public bool GameOver { get; private set; } = false;
     public bool GameWon { get; private set; } = false;
 
+    public bool GameActive
+    {
+        get
+        {
+            return !GameOver && !GameWon;
+        }
+    }
+
     public GameObject Player { get; private set; }
 
     private List<GameObject> m_enemies = new List<GameObject>();
@@ -108,6 +116,7 @@ public class GameStateManager : MonoBehaviour
         if (m_timeRemaining < 0.0f)
         {
             LoseGame();
+            Player.GetComponent<CharacterHealth>().DestroyHead();
         }
     }
 }

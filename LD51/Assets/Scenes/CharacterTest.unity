@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 682818127, guid: faaf802dd00d4af40a6fb94566b3469a, type: 3}
+      propertyPath: m_patrol
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 195584509804765110, guid: faaf802dd00d4af40a6fb94566b3469a, type: 3}
       propertyPath: m_ConnectedAnchor.x
       value: 0

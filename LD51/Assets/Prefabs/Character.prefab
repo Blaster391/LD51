@@ -2030,8 +2030,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_hp: 3
+  m_head: {fileID: 905960029649784436}
   m_body: {fileID: 982502696003287612}
   m_controller: {fileID: 982502696253122322}
+  m_isPlayer: 0
 --- !u!1 &982502697171266934
 GameObject:
   m_ObjectHideFlags: 0

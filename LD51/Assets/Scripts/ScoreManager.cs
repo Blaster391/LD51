@@ -24,6 +24,12 @@ public class ScoreManager : MonoBehaviour
         m_scoreboardComponent = GetComponent<Scoreboard.Unity.ScoreboardComponent>();
     }
 
+    public int GetScore()
+    {
+        float totalScore = (m_stateManager.Score * 1000.0f) / m_stateManager.TimeInLevel;
+        return Mathf.RoundToInt(totalScore);
+    }
+
     public void TrySubmitScore()
     {
         if(m_scoreSubmitting)
@@ -34,7 +40,9 @@ public class ScoreManager : MonoBehaviour
         ScoreboardCore.Data.Score score = new ScoreboardCore.Data.Score();
         score.User = "test";
         score.Level = m_levelName;
-        score.ScoreValue = m_stateManager.Score;
+
+
+        score.ScoreValue = GetScore();
         score.SubmittedDateTime = DateTime.UtcNow;
         score.ExtraData.Add("time", $"{m_stateManager.TimeInLevel:.00}");
 

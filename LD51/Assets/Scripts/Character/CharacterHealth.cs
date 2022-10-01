@@ -8,6 +8,8 @@ public class CharacterHealth : MonoBehaviour
     private int m_hp = 3;
 
     [SerializeField]
+    private Limb m_head;
+    [SerializeField]
     private Rigidbody2D m_body;
     [SerializeField]
     private GameObject m_controller;
@@ -54,7 +56,10 @@ public class CharacterHealth : MonoBehaviour
             m_hp -= hitLimb.GetDamageFromHit();
             if (m_hp <= 0)
             {
-                m_gameStateManager.AddScore(hitLimb.GetScore() * m_gameStateManager.TimeRemaining);
+                if(!IsPlayer())
+                {
+                    m_gameStateManager.AddScore(hitLimb.GetScore() * m_gameStateManager.TimeRemaining);
+                }
 
                 hitLimb.OnKilled();
                 Die();
@@ -89,6 +94,14 @@ public class CharacterHealth : MonoBehaviour
             
             m_gameStateManager.RemoveEnemy(gameObject);
             m_gameStateManager.ResetTimer();
+        }
+    }
+
+    public void DestroyHead()
+    {
+        while(IsAlive())
+        {
+            TakeDamage(m_head, Vector2.up, m_head.transform.position, 10.0f);
         }
     }
 }
