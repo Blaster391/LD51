@@ -13,6 +13,12 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     private int m_ammo = 6;
 
+    [SerializeField]
+    private float m_fadeTime = 0.2f;
+
+    private float m_fadeRemaining = 0.0f;
+
+    private GameObject m_heldBy = null;
     private GameObject m_thrownBy = null;
 
     public Vector2 GetFiringPoint()
@@ -34,9 +40,21 @@ public class Weapon : MonoBehaviour
         --m_ammo;
     }
 
+    public void Pickup(GameObject holder)
+    {
+        if(m_heldBy != null)
+        {
+            m_heldBy.GetComponent<CharacterController>().DropWeapon();
+        }
+
+        m_heldBy = holder;
+    }
+
     public void Throw(GameObject thrower)
     {
+        m_heldBy = null;
         m_thrownBy = thrower;
+        m_fadeRemaining = m_fadeTime;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -59,6 +77,35 @@ public class Weapon : MonoBehaviour
                 hitCharacterHealth.TakeDamage(hitLimb, weaponVelocity, collision.GetContact(0).point, 2.0f);
                 m_thrownBy = null;
             }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.layer == 10)
+        {
+            m_fadeRemaining = 0.0f;
+            GetComponent<Collider2D>().isTrigger = false;
+            return;
+        }
+
+        CharacterHealth hitCharacterHealth = collision.gameObject.GetComponentInParent<CharacterHealth>();
+        Limb hitLimb = collision.gameObject.GetComponent<Limb>();
+        if (hitLimb != null && hitCharacterHealth.gameObject != m_thrownBy)
+        {
+            m_fadeRemaining = 0.0f;
+            GetComponent<Collider2D>().isTrigger = false;
+            return;
+        }
+    }
+
+
+    private void Update()
+    {
+        if(m_fadeRemaining > 0.0f)
+        {
+            m_fadeRemaining -= Time.deltaTime;
+            GetComponent<Collider2D>().isTrigger = (m_fadeRemaining > 0.0f);
         }
     }
 }

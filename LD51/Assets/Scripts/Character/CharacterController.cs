@@ -9,6 +9,8 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private GameObject m_visuals;
     [SerializeField]
+    private GameObject m_body;
+    [SerializeField]
     private Animator m_animator;
     [SerializeField]
     private GameObject m_itemHolder;
@@ -79,6 +81,8 @@ public class CharacterController : MonoBehaviour
                 m_arm2.GetComponent<Joint2D>().enabled = false;
                 m_hand2.GetComponent<Joint2D>().enabled = false;
             }
+
+            m_equippedWeapon.Pickup(gameObject);
         }
     }
 
@@ -92,6 +96,9 @@ public class CharacterController : MonoBehaviour
 
         if(!m_gameStateManager.GameActive && m_health.IsPlayer())
         {
+            DropWeapon();
+            m_character.transform.position = transform.position;
+            m_body.transform.position = transform.position;
             return;
         }
 
@@ -142,6 +149,7 @@ public class CharacterController : MonoBehaviour
         }
 
         m_character.transform.position = transform.position;
+        m_body.transform.position = transform.position;
 
         if (m_equippedWeapon != null)
         {
@@ -252,6 +260,8 @@ public class CharacterController : MonoBehaviour
             return;
         }
 
+        m_groundWeapon.Pickup(gameObject);
+
         m_equippedWeapon = m_groundWeapon;
 
         m_arm1.GetComponent<Joint2D>().enabled = false;
@@ -290,6 +300,17 @@ public class CharacterController : MonoBehaviour
         m_equippedWeapon = null;
     }
 
+    public void DropWeapon()
+    {
+        m_arm1.GetComponent<Joint2D>().enabled = true;
+        m_arm2.GetComponent<Joint2D>().enabled = true;
+
+        m_hand1.GetComponent<Joint2D>().enabled = true;
+        m_hand2.GetComponent<Joint2D>().enabled = true;
+
+        m_equippedWeapon = null;
+    }
+
 
     private void DoGroundCast()
     {
@@ -306,7 +327,7 @@ public class CharacterController : MonoBehaviour
         }
 
         m_groundWeapon = null;
-        hits = Physics2D.CircleCastAll(m_rigidbody2D.position, capsuleBounds.extents.x * 2.5f, Vector2.down);
+        hits = Physics2D.CircleCastAll(m_rigidbody2D.position, capsuleBounds.extents.x * 4.0f, Vector2.down);
         foreach (var hit in hits)
         {
             if (hit.collider.gameObject.layer == 11)
@@ -319,11 +340,12 @@ public class CharacterController : MonoBehaviour
 
     public void OnDeath()
     {
-        m_arm1.GetComponent<Joint2D>().enabled = true;
-        m_arm2.GetComponent<Joint2D>().enabled = true;
+        DropWeapon();
+    }
 
-        m_hand1.GetComponent<Joint2D>().enabled = true;
-        m_hand2.GetComponent<Joint2D>().enabled = true;
+    public bool HasWeapon()
+    {
+        return m_equippedWeapon != null;
     }
 
     public int GetBulletCount()

@@ -17,6 +17,13 @@ public class AIControls : BaseControls
     private float m_moveSpeed = 0.25f;
     [SerializeField]
     private float m_attackDelay = 2.0f;
+    [SerializeField]
+    private float m_maxWaitTime = 3.0f;
+    [SerializeField]
+    private float m_waitVariance = 1.0f;
+
+    [SerializeField]
+    private GameObject m_eyeObject = null;
 
     [SerializeField]
     private float m_accuracy = 1.0f;
@@ -89,7 +96,7 @@ public class AIControls : BaseControls
 
         if(m_playerHealth.IsAlive())
         {
-            if (GameHelper.HasLineOfSight(gameObject, m_playerController.gameObject))
+            if (GameHelper.HasLineOfSight(m_eyeObject, m_playerController.gameObject))
             {
                 m_detectionBuffer += Time.deltaTime;
                 m_hasLOS = true;
@@ -136,10 +143,32 @@ public class AIControls : BaseControls
             {
                 if (m_walkRight)
                 {
+                    Vector2 currentPos = transform.position;
+                    Vector2 toTheRight = currentPos + Vector2.right * 2.0f;
+
+                    if (WillHitWall(currentPos, toTheRight) || !WillHitWall(toTheRight, toTheRight + Vector2.down * 1.0f))
+                    {
+                        m_walkRight = false;
+                        m_waitTime = m_maxWaitTime - m_waitVariance * Random.value;
+                        return;
+                    }
+
+                    m_targetPosition = toTheRight;
                     m_movement = m_moveSpeed;
                 }
                 else
                 {
+                    Vector2 currentPos = transform.position;
+                    Vector2 toTheLeft = currentPos + Vector2.left * 2.0f;
+
+                    if (WillHitWall(currentPos, toTheLeft) || !WillHitWall(toTheLeft, toTheLeft + Vector2.down * 1.0f))
+                    {
+                        m_walkRight = true;
+                        m_waitTime = m_maxWaitTime - m_waitVariance * Random.value;
+                        return;
+                    }
+
+                    m_targetPosition = toTheLeft;
                     m_movement = -m_moveSpeed;
                 }
             }
@@ -148,7 +177,7 @@ public class AIControls : BaseControls
 
     private void State_Attack()
     {
-        if(m_controller.GetBulletCount() == 0)
+        if(!m_controller.HasWeapon())
         {
             Enter_Flee();
             return;
@@ -177,8 +206,15 @@ public class AIControls : BaseControls
             m_attackTime += Time.deltaTime;
             if(m_attackTime > m_attackDelay)
             {
-                m_shoot = true;
-                m_attackTime = 0.0f;
+                if (m_controller.GetBulletCount() == 0)
+                {
+                    m_throw = true;
+                }
+                else
+                {
+                    m_shoot = true;
+                    m_attackTime = 0.0f;
+                }
             }
         }
 
@@ -190,6 +226,35 @@ public class AIControls : BaseControls
         {
             Enter_Idle();
             return;
+        }
+
+        float directionToPlayer = m_playerController.transform.position.x - transform.position.x;
+
+        if (directionToPlayer < 0.0f)
+        {
+            Vector2 currentPos = transform.position;
+            Vector2 toTheRight = currentPos + Vector2.right * 1.5f;
+
+            if (WillHitWall(currentPos, toTheRight))
+            {
+                return;
+            }
+
+            m_targetPosition = toTheRight;
+            m_movement = m_moveSpeed;
+        }
+        else
+        {
+            Vector2 currentPos = transform.position;
+            Vector2 toTheLeft = currentPos + Vector2.left * 1.5f;
+
+            if (WillHitWall(currentPos, toTheLeft))
+            {
+                return;
+            }
+
+            m_targetPosition = toTheLeft;
+            m_movement = -m_moveSpeed;
         }
     }
 
@@ -218,5 +283,31 @@ public class AIControls : BaseControls
     private void Enter_Dead()
     {
         m_state = AIState.Dead;
+    }
+
+    private bool WillHitWall(Vector2 from, Vector2 to)
+    {
+        Vector2 direction = to - from;
+        float distance = direction.magnitude;
+
+        ContactFilter2D filter = new ContactFilter2D();
+        RaycastHit2D[] results = new RaycastHit2D[10];
+        var raycastHit = Physics2D.Raycast(from, direction, filter, results, distance);
+
+
+        foreach (var hit in results)
+        {
+            if (hit.collider == null)
+            {
+                break;
+            }
+
+            if (hit.collider.gameObject.layer == 10)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

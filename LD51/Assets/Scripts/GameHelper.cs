@@ -27,7 +27,7 @@ public static class GameHelper
         Vector2 direction = toPosition2D - fromPosition2D;
 
         ContactFilter2D filter = new ContactFilter2D();
-        RaycastHit2D[] results = new RaycastHit2D[10];
+        RaycastHit2D[] results = new RaycastHit2D[25];
         var raycastHit = Physics2D.Raycast(from.transform.position, direction, filter, results);
 
         CharacterHealth toCharacterHealth = to.GetComponentInParent<CharacterHealth>();
@@ -42,7 +42,7 @@ public static class GameHelper
 
             if (hit.collider.gameObject.layer == 10)
             {
-                break;
+                return false;
             }
 
             CharacterHealth hitCharacterHealth = hit.collider.GetComponentInParent<CharacterHealth>();
