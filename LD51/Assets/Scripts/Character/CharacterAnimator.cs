@@ -10,7 +10,7 @@ public class CharacterAnimator : MonoBehaviour
         Physics2D.IgnoreLayerCollision(8, 8);
         Physics2D.IgnoreLayerCollision(8, 9);
 
-        //Physics2D.IgnoreLayerCollision(8, 11);
+        Physics2D.IgnoreLayerCollision(8, 11);
         Physics2D.IgnoreLayerCollision(9, 11);
     }
 
