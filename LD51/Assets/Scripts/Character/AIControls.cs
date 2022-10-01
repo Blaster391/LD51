@@ -26,7 +26,7 @@ public class AIControls : BaseControls
     private GameObject m_eyeObject = null;
 
     [SerializeField]
-    private float m_accuracy = 1.0f;
+    private float m_accuracy = 0.1f;
     [SerializeField]
     private float m_playerLocationUpdateTime = 1.0f;
 
@@ -183,7 +183,8 @@ public class AIControls : BaseControls
             return;
         }
 
-        if (m_detectionBuffer > m_attackGiveUpBuffer)
+        m_detectionBuffer = Mathf.Min(m_attackGiveUpBuffer, m_detectionBuffer);
+        if (m_detectionBuffer == 0.0f)
         {
             Enter_Idle();
             return;
@@ -197,6 +198,11 @@ public class AIControls : BaseControls
                 m_lastUpdatedPlayerLocation = 0.0f;
                 m_playerLocationOld = m_playerLocation;
                 m_playerLocation = m_playerController.transform.position;
+
+                Vector2 myPosition = transform.position;
+                float distanceFromPlayer = (m_playerLocation - myPosition).magnitude;
+
+                m_playerLocation += new Vector2(distanceFromPlayer * m_accuracy * (Random.value - 0.5f), distanceFromPlayer * m_accuracy * (Random.value - 0.5f));
             }
 
             float targetLerp = m_lastUpdatedPlayerLocation / m_playerLocationUpdateTime;
@@ -213,7 +219,10 @@ public class AIControls : BaseControls
                 else
                 {
                     m_shoot = true;
-                    m_attackTime = 0.0f;
+                    if(!m_controller.GetEquippedWeapon().IsAutomatic())
+                    {
+                        m_attackTime = 0.0f;
+                    }
                 }
             }
         }
@@ -222,7 +231,8 @@ public class AIControls : BaseControls
 
     private void State_Flee()
     {
-        if (m_detectionBuffer > m_fleeGiveUpBuffer)
+        m_detectionBuffer = Mathf.Min(m_fleeGiveUpBuffer, m_detectionBuffer);
+        if (m_detectionBuffer == 0.0f)
         {
             Enter_Idle();
             return;
@@ -267,7 +277,7 @@ public class AIControls : BaseControls
     private void Enter_Attack()
     {
         m_state = AIState.Attack;
-        m_detectionBuffer = 0.0f;
+        m_detectionBuffer = m_attackGiveUpBuffer;
         m_attackTime = 0.0f;
 
         m_playerLocationOld = m_playerController.transform.position;
@@ -277,7 +287,7 @@ public class AIControls : BaseControls
     private void Enter_Flee()
     {
         m_state = AIState.Flee;
-        m_detectionBuffer = 0.0f;
+        m_detectionBuffer = m_fleeGiveUpBuffer;
     }
 
     private void Enter_Dead()
