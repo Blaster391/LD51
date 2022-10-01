@@ -5,9 +5,6 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField]
-    private GameObject m_firingPoint = null;
-
-    [SerializeField]
     private bool m_twoHanded = false;
 
     [SerializeField]
@@ -16,6 +13,18 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     private float m_fadeTime = 0.2f;
 
+    [SerializeField]
+    private float m_spread = 0.0f;
+    [SerializeField]
+    private int m_shotsPerBurst = 1;
+    [SerializeField]
+    private float m_delay = 0.0f;
+    [SerializeField]
+    private bool m_isAutomatic = false;
+
+    private float m_currentDelay = 0.0f;
+
+
     private float m_fadeRemaining = 0.0f;
 
     private GameObject m_heldBy = null;
@@ -23,12 +32,17 @@ public class Weapon : MonoBehaviour
 
     public Vector2 GetFiringPoint()
     {
-        return m_firingPoint.transform.position;
+        return transform.position;
     }
 
     public bool IsTwoHanded()
     {
         return m_twoHanded;
+    }
+
+    public bool IsAutomatic()
+    {
+        return m_isAutomatic;
     }
 
     public int GetAmmo()
@@ -37,7 +51,23 @@ public class Weapon : MonoBehaviour
     }
     public void FireWeapon()
     {
-        --m_ammo;
+        m_ammo -= m_shotsPerBurst;
+        m_currentDelay = m_delay;
+    }
+
+    public int GetShotsPerBurst()
+    {
+        return m_shotsPerBurst;
+    }
+
+    public bool CanFire()
+    {
+        return m_currentDelay <= 0.0f;
+    }
+
+    public float GetSpread()
+    {
+        return m_spread;
     }
 
     public void Pickup(GameObject holder)
@@ -103,7 +133,8 @@ public class Weapon : MonoBehaviour
 
     private void Update()
     {
-        if(m_fadeRemaining > 0.0f)
+        m_currentDelay -= Time.deltaTime;
+        if (m_fadeRemaining > 0.0f)
         {
             m_fadeRemaining -= Time.deltaTime;
             GetComponent<Collider2D>().isTrigger = (m_fadeRemaining > 0.0f);

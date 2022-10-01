@@ -21,7 +21,6 @@ public static class GameHelper
 
     public static bool HasLineOfSight(GameObject from, GameObject to)
     {
-        int layerMask = 1 << 8;
         Vector2 fromPosition2D = from.transform.position;
         Vector2 toPosition2D = to.transform.position;
         Vector2 direction = toPosition2D - fromPosition2D;

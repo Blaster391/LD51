@@ -186,8 +186,7 @@ public class CharacterController : MonoBehaviour
             {
                 TryThrow();
             }
-
-            if (m_controls.GetShoot())
+            else if (m_controls.GetShoot() && m_equippedWeapon.CanFire())
             {
                 TryShoot();
             }
@@ -210,42 +209,51 @@ public class CharacterController : MonoBehaviour
         }
 
         Vector2 weaponPosition = m_equippedWeapon.GetFiringPoint();
-        var directionToTarget = m_controls.GetTargetPosition() - weaponPosition;
-        Vector2 hitPosition = weaponPosition + directionToTarget * 100.0f;
+        var initialDireactionToTarget = m_controls.GetTargetPosition() - weaponPosition;
+        initialDireactionToTarget.Normalize();
 
-        ContactFilter2D filter = new ContactFilter2D();
-        RaycastHit2D[] results = new RaycastHit2D[10];
-        var raycastHit = Physics2D.Raycast(weaponPosition, directionToTarget, filter, results);
-
-
-        foreach (var hit in results)
+        for (int i = 0; i < m_equippedWeapon.GetShotsPerBurst(); ++i)
         {
-            if (hit.collider == null)
+            var directionToTarget = initialDireactionToTarget + new Vector2((Random.value - 0.5f) * m_equippedWeapon.GetSpread(), (Random.value - 0.5f) * m_equippedWeapon.GetSpread());
+
+            directionToTarget.Normalize();
+
+            Vector2 hitPosition = weaponPosition + directionToTarget * 100.0f;
+
+            ContactFilter2D filter = new ContactFilter2D();
+            RaycastHit2D[] results = new RaycastHit2D[10];
+            var raycastHit = Physics2D.Raycast(weaponPosition, directionToTarget, filter, results);
+
+
+            foreach (var hit in results)
             {
-                break;
+                if (hit.collider == null)
+                {
+                    break;
+                }
+
+                if (hit.collider.gameObject.layer == 10)
+                {
+                    hitPosition = hit.point;
+                    break;
+                }
+
+                CharacterHealth hitCharacterHealth = hit.collider.GetComponentInParent<CharacterHealth>();
+                Limb hitLimb = hit.collider.GetComponent<Limb>();
+                if (hitLimb != null && hitCharacterHealth != null && hitCharacterHealth != m_health)
+                {
+                    hitPosition = hit.point;
+                    hitCharacterHealth.TakeDamage(hitLimb, directionToTarget, hit.point, 10.0f);
+                    break;
+                }
             }
 
-            if (hit.collider.gameObject.layer == 10)
-            {
-                hitPosition = hit.point;
-                break;
-            }
-
-            CharacterHealth hitCharacterHealth = hit.collider.GetComponentInParent<CharacterHealth>();
-            Limb hitLimb = hit.collider.GetComponent<Limb>();
-            if (hitLimb != null && hitCharacterHealth != null && hitCharacterHealth != m_health)
-            {
-                hitPosition = hit.point;
-                hitCharacterHealth.TakeDamage(hitLimb, directionToTarget, hit.point, 10.0f);
-                break;
-            }
+            var lineRendererObject = Instantiate(m_bulletLineRenderer);
+            BulletLineRenderer lineRenderer = lineRendererObject.GetComponent<BulletLineRenderer>();
+            lineRenderer.DrawLine(weaponPosition, hitPosition);
         }
 
         m_equippedWeapon.FireWeapon();
-
-        var lineRendererObject = Instantiate(m_bulletLineRenderer);
-        BulletLineRenderer lineRenderer = lineRendererObject.GetComponent<BulletLineRenderer>();
-        lineRenderer.DrawLine(weaponPosition, hitPosition);
     }
 
     private void TryPickup()
@@ -350,6 +358,11 @@ public class CharacterController : MonoBehaviour
     public bool HasWeapon()
     {
         return m_equippedWeapon != null;
+    }
+
+    public Weapon GetEquippedWeapon()
+    {
+        return m_equippedWeapon;
     }
 
     public int GetBulletCount()
