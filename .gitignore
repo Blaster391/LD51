@@ -57,4 +57,10 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+#Scoreboard key
+*.scoreboard
+*.scoreboard.txt
+*.scoreboard.txt.meta
+*.scoreboard.meta
 
+!Newtonsoft.Json.dll

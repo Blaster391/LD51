@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -17,6 +18,13 @@ public class UIManager : MonoBehaviour
     private GameObject m_lifePrefab;
     [SerializeField]
     private float m_lifeSpacing = 75.0f;
+
+    [SerializeField]
+    private GameObject m_gameOverHolder;
+    [SerializeField]
+    private GameObject m_gameWonHolder;
+    [SerializeField]
+    private Text m_timeRemaining;
 
     private List<GameObject> m_bullets = new List<GameObject>();
     private List<GameObject> m_health = new List<GameObject>();
@@ -36,6 +44,14 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        m_gameOverHolder.SetActive(m_gameStateManager.GameOver);
+        m_gameWonHolder.SetActive(m_gameStateManager.GameWon);
+
+        if(!m_gameStateManager.GameWon && !m_gameStateManager.GameOver)
+        {
+            m_timeRemaining.text = m_gameStateManager.TimeRemaining.ToString();
+        }
+
         int bulletCount = m_playerController.GetBulletCount();
         if (m_bullets.Count != bulletCount)
         {

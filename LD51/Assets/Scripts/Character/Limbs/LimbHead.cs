@@ -5,7 +5,7 @@ using UnityEngine;
 public class LimbHead : Limb
 {
     public override int GetDamageFromHit() { return 3; }
-
+    public override int GetScore() { return 2; }
     public override void OnKilled()
     {
         GetComponent<Joint2D>().enabled = false;

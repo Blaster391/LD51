@@ -26,28 +26,48 @@ namespace Scoreboard
 
         public class ScoreboardComponent : MonoBehaviour
         {
-            private void Awake()
-            {
-                TextAsset connectionText = Resources.Load<TextAsset>(m_scoreboardConnectionFile);
-
-                m_connection = JsonConvert.DeserializeObject<ScoreboardConnection>(connectionText.text);
-
-                // For testing
-                //Score score = new Score();
-                //score.Level = "Test";
-                //score.User = "Oscar Biggs";
-                //score.ScoreValue = 123;
-                //score.ExtraData.Add("test", "data");
-
-                //SubmitResult(score);
-            }
-
             [SerializeField]
             private string m_scoreboardConnectionFile = "";
 
             private ScoreboardConnection m_connection = null;
 
-            public void GetHighscores(Func<List<ScoreboardCore.Data.ScoreResult>, bool, bool> _onRequestComplete, string level)
+            private void Awake()
+            {
+                TextAsset connectionText = Resources.Load<TextAsset>(m_scoreboardConnectionFile);
+
+                if(connectionText == null)
+                {
+                    return;
+                }
+
+                m_connection = JsonConvert.DeserializeObject<ScoreboardConnection>(connectionText.text);
+
+                // For testing
+                //Score score = new Score();
+                //score.Level = "Lap";
+                //score.User = "TEST_ID_3";
+                //score.ScoreValue = 999;
+                //score.ExtraData.Add("Username", "Shane");
+
+
+                //Func<bool, string, bool> callback = (success, result) =>
+                //{
+                //    if (success)
+                //    {
+                //        Debug.Log("SUCCESS");
+                //    }
+                //    else
+                //    {
+                //        Debug.Log("FAIL");
+                //    }
+
+                //    return true;
+                //};
+
+                //SubmitResult(score, callback);
+            }
+
+            public void GetHighscores(Func<List<ScoreboardCore.Data.ScoreResult>, bool, bool> _onRequestComplete, string level, bool _highscoresOnly = true, int _resultsSize = 10)
             {
                 if(m_connection == null)
                 {
@@ -55,13 +75,62 @@ namespace Scoreboard
                     return;
                 }
 
-                StartCoroutine(GetHighscoresCoroutine(_onRequestComplete, level));
+                StartCoroutine(GetHighscoresCoroutine(_onRequestComplete, level, _highscoresOnly, _resultsSize));
             }
 
-            private IEnumerator GetHighscoresCoroutine(Func<List<ScoreboardCore.Data.ScoreResult>, bool, bool> _onRequestComplete, string level)
+            public void GetTotalForLevel(Func<int, bool, bool> _onRequestComplete, string level)
+            {
+                if (m_connection == null)
+                {
+                    _onRequestComplete(-1, false);
+                    return;
+                }
+
+                StartCoroutine(GetTotalForLevelCoroutine(_onRequestComplete, level));
+            }
+
+            private IEnumerator GetTotalForLevelCoroutine(Func<int, bool, bool> _onRequestComplete, string level)
+            {
+
+                string getUrl = "/api/scoreboard/" + m_connection.GameName + "/total?level=" + level;
+                var request = UnityWebRequest.Get(m_connection.DatabaseAddress + getUrl);
+                yield return request.SendWebRequest();
+
+                if (request.isNetworkError || request.isHttpError)
+                {
+                    Debug.LogError(request.error);
+
+                    _onRequestComplete(-1, false);
+                }
+                else
+                {
+                    Debug.Log("Get request complete!");
+
+                    string resultsString = request.downloadHandler.text;
+                    int resultValue = -1;
+                    if(int.TryParse(resultsString, out resultValue))
+                    {
+                        _onRequestComplete(resultValue, false);
+                    }
+                    else
+                    {
+                        _onRequestComplete(-1, false);
+                    }
+
+                   
+                }
+            }
+
+            private IEnumerator GetHighscoresCoroutine(Func<List<ScoreboardCore.Data.ScoreResult>, bool, bool> _onRequestComplete, string level, bool _highscoresOnly = true, int _resultsSize = 10)
             {
 
                 string getUrl = "/api/scoreboard/" + m_connection.GameName + "?level=" + level;
+                getUrl += $"&amount={_resultsSize}";
+                if (_highscoresOnly)
+                {
+                    getUrl += "&highscoreOnly=true";
+                }
+
                 var request = UnityWebRequest.Get(m_connection.DatabaseAddress + getUrl);
                 yield return request.SendWebRequest();
 

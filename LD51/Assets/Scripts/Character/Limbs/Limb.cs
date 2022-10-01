@@ -8,6 +8,7 @@ public class Limb : MonoBehaviour
     private List<BloodEmitter> m_emitters = new List<BloodEmitter>();
 
     public virtual int GetDamageFromHit() { return 1; }
+    public virtual int GetScore() { return 1; }
     public virtual void OnKilled()
     {
         

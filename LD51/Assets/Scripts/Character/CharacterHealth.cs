@@ -12,9 +12,28 @@ public class CharacterHealth : MonoBehaviour
     [SerializeField]
     private GameObject m_controller;
 
+    [SerializeField]
+    private bool m_isPlayer = false;
+
+    private GameStateManager m_gameStateManager = null;
+
     private void Awake()
     {
-        GameHelper.GetManager<GameStateManager>().RegisterPlayer(gameObject);
+        m_gameStateManager = GameHelper.GetManager<GameStateManager>();
+
+        if (m_isPlayer)
+        {
+            m_gameStateManager.RegisterPlayer(gameObject);
+        }
+        else
+        {
+            m_gameStateManager.RegisterEnemy(gameObject);
+        }
+    }
+
+    public bool IsPlayer()
+    {
+        return m_isPlayer;
     }
 
     public bool IsAlive()
@@ -35,6 +54,8 @@ public class CharacterHealth : MonoBehaviour
             m_hp -= hitLimb.GetDamageFromHit();
             if (m_hp <= 0)
             {
+                m_gameStateManager.AddScore(hitLimb.GetScore() * m_gameStateManager.TimeRemaining);
+
                 hitLimb.OnKilled();
                 Die();
 
@@ -58,5 +79,16 @@ public class CharacterHealth : MonoBehaviour
 
         RigidbodyConstraints2D constraints = new RigidbodyConstraints2D();
         m_body.constraints = constraints;
+
+        if(m_isPlayer)
+        {
+            m_gameStateManager.LoseGame();
+        }
+        else
+        {
+            
+            m_gameStateManager.RemoveEnemy(gameObject);
+            m_gameStateManager.ResetTimer();
+        }
     }
 }

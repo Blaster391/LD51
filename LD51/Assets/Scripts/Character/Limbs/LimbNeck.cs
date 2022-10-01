@@ -5,6 +5,7 @@ using UnityEngine;
 public class LimbNeck : Limb
 {
     public override int GetDamageFromHit() { return 5; }
+    public override int GetScore() { return 2; }
 
     public override void OnKilled()
     {
