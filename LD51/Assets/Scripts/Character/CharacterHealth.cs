@@ -22,6 +22,11 @@ public class CharacterHealth : MonoBehaviour
         return m_hp > 0;
     }
 
+    public int GetHealth()
+    {
+        return m_hp;
+    }
+
     public void TakeDamage(Limb hitLimb, Vector2 hitDirection, Vector2 hitPosition, float hitForce)
     {
         bool justKilled = IsAlive();
