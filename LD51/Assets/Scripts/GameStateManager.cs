@@ -84,6 +84,13 @@ public class GameStateManager : MonoBehaviour
     public void WinGame()
     {
         GameWon = true;
+
+        int levelIndex = (SceneManager.GetActiveScene().buildIndex);
+        if (!PlayerPrefs.HasKey("levelCompleted") || levelIndex > PlayerPrefs.GetInt("levelCompleted"))
+        {
+            PlayerPrefs.SetInt("levelCompleted", levelIndex);
+        }
+
         GameHelper.GetManager<ScoreManager>().TrySubmitScore();
     }
 

@@ -37,8 +37,14 @@ public class ScoreManager : MonoBehaviour
             return;
         }
 
+        string playerName = PlayerPrefs.GetString("name");
+        if(string.IsNullOrEmpty(playerName))
+        {
+            return;
+        }
+
         ScoreboardCore.Data.Score score = new ScoreboardCore.Data.Score();
-        score.User = "test";
+        score.User = playerName;
         score.Level = m_levelName;
 
 
