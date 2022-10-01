@@ -289,12 +289,16 @@ public class CharacterController : MonoBehaviour
         m_hand1.GetComponent<Joint2D>().enabled = true;
         m_hand2.GetComponent<Joint2D>().enabled = true;
 
-        Vector2 weaponPosition = m_itemHolder.transform.position;
-        var directionToTarget = m_controls.GetTargetPosition() - weaponPosition;
+        //Vector2 weaponPosition = m_itemHolder.transform.position;
+        //var directionToTarget = m_controls.GetTargetPosition() - weaponPosition;
+
+        Vector2 myPosition = transform.position;
+        var directionToTarget = m_controls.GetTargetPosition() - myPosition;
         directionToTarget.Normalize();
 
-        Vector2 upwardsForce = Vector2.up * m_throwForce;
+        Vector2 upwardsForce = Vector2.up * m_throwForce * 0.25f;
 
+        m_equippedWeapon.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         m_equippedWeapon.GetComponent<Rigidbody2D>().AddForce(directionToTarget * m_throwForce + upwardsForce, ForceMode2D.Impulse);
 
         m_equippedWeapon = null;

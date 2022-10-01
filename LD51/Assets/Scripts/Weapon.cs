@@ -65,7 +65,7 @@ public class Weapon : MonoBehaviour
             Vector2 weaponVelocity = GetComponent<Rigidbody2D>().velocity;
             float throwSpeed = weaponVelocity.magnitude;
 
-            if(throwSpeed < 1.0f)
+            if(throwSpeed < 0.25f)
             {
                 m_thrownBy = null;
                 return;

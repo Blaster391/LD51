@@ -1260,7 +1260,7 @@ MonoBehaviour:
   m_baseMovementForce: 25
   m_baseJumpForce: 13
   m_weaponHoldDistance: 0.7
-  m_throwForce: 10
+  m_throwForce: 12
   m_airDampening: 0.25
   m_groundedEpsilon: 0.25
   m_weaponHoldOffset: {x: 0, y: 0.15}
