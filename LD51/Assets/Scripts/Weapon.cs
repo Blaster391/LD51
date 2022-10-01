@@ -52,6 +52,7 @@ public class Weapon : MonoBehaviour
 
     public void Throw(GameObject thrower)
     {
+        GetComponent<Collider2D>().isTrigger = true;
         m_heldBy = null;
         m_thrownBy = thrower;
         m_fadeRemaining = m_fadeTime;

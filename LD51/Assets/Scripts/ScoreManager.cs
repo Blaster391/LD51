@@ -9,8 +9,6 @@ public class ScoreManager : MonoBehaviour
     [SerializeField]
     private string m_levelName = "test";
 
-    List<ScoreboardCore.Data.ScoreResult> m_highscores;
-
     GameStateManager m_stateManager = null;
     ScoreboardComponent m_scoreboardComponent;
 
@@ -52,22 +50,13 @@ public class ScoreManager : MonoBehaviour
         score.SubmittedDateTime = DateTime.UtcNow;
         score.ExtraData.Add("time", $"{m_stateManager.TimeInLevel:.00}");
 
-        Func<List<ScoreboardCore.Data.ScoreResult>, bool, bool> highscoresCallback = (results, success) =>
-        {
 
-            if(success)
-            {
-                m_highscoresAcquired = true;
-                m_highscores = results;
-            }
-
-            return true;
-        };
 
         Func<bool, string, bool> callback = (success, result) =>
         {
             m_scoreSubmitting = false;
-            m_scoreboardComponent.GetHighscores(highscoresCallback, m_levelName);
+            LoadScoreboard();
+            
 
             return true;
         };
@@ -76,6 +65,25 @@ public class ScoreManager : MonoBehaviour
 
         m_scoreSubmitting = true;
         m_scoreboardComponent.SubmitResult(score, callback);
+    }
+
+    public void LoadScoreboard()
+    {
+        Func<List<ScoreboardCore.Data.ScoreResult>, bool, bool> highscoresCallback = (results, success) =>
+        {
+
+            if (success)
+            {
+                m_highscoresAcquired = true;
+
+                GameHelper.GetManager<UIManager>().ShowScoreboard(results);
+            }
+
+            return true;
+        };
+
+        m_scoreboardComponent.GetHighscores(highscoresCallback, m_levelName);
+
     }
 
 }

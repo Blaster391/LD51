@@ -79,6 +79,7 @@ public class GameStateManager : MonoBehaviour
     public void LoseGame()
     {
         GameOver = true;
+        GameHelper.GetManager<ScoreManager>().LoadScoreboard();
     }
 
     public void WinGame()

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,7 +25,15 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject m_gameWonHolder;
     [SerializeField]
-    private Text m_timeRemaining;
+    private TMP_Text m_timeRemaining;
+
+    [SerializeField]
+    private GameObject m_scoreboard;
+
+    [SerializeField]
+    private List<TMP_Text> m_names = new List<TMP_Text>();
+    [SerializeField]
+    private List<TMP_Text> m_scores = new List<TMP_Text>();
 
     private List<GameObject> m_bullets = new List<GameObject>();
     private List<GameObject> m_health = new List<GameObject>();
@@ -36,6 +45,8 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        m_scoreboard.SetActive(false);
+
         m_gameStateManager = GameHelper.GetManager<GameStateManager>();
         m_playerController = m_gameStateManager.PlayerController;
         m_playerHealth = m_gameStateManager.Player.GetComponent<CharacterHealth>();
@@ -88,6 +99,27 @@ public class UIManager : MonoBehaviour
                 newLife.transform.Translate(new Vector3(m_lifeSpacing * i, 0, 0));
                 m_health.Add(newLife);
             }
+        }
+    }
+
+    public void ShowScoreboard(List<ScoreboardCore.Data.ScoreResult> scores)
+    {
+        m_scoreboard.SetActive(true);
+
+        for(int i = 0; i < m_names.Count; ++i)
+        {
+            if(i < scores.Count)
+            {
+                m_names[i].text = scores[i].Score.User;
+                m_scores[i].text = scores[i].Score.ScoreValue.ToString();
+            }
+            else
+            {
+                m_names[i].text = "";
+                m_scores[i].text = "";
+            }
+
+
         }
     }
 }
