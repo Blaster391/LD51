@@ -286,4 +286,14 @@ public class CharacterController : MonoBehaviour
         m_hand1.GetComponent<Joint2D>().enabled = true;
         m_hand2.GetComponent<Joint2D>().enabled = true;
     }
+
+    public int GetBulletCount()
+    {
+        if(m_equippedWeapon != null)
+        {
+            return m_equippedWeapon.GetAmmo();
+        }
+
+        return 0;
+    }
 }

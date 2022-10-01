@@ -12,6 +12,11 @@ public class CharacterHealth : MonoBehaviour
     [SerializeField]
     private GameObject m_controller;
 
+    private void Awake()
+    {
+        GameHelper.GetManager<GameStateManager>().RegisterPlayer(gameObject);
+    }
+
     public bool IsAlive()
     {
         return m_hp > 0;
