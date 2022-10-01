@@ -10,11 +10,23 @@ public class CharacterController : MonoBehaviour
     private GameObject m_visuals;
     [SerializeField]
     private Animator m_animator;
+    [SerializeField]
+    private GameObject m_itemHolder;
+    [SerializeField]
+    private GameObject m_arm1;
+    [SerializeField]
+    private GameObject m_arm2;
+    [SerializeField]
+    private GameObject m_hand1;
+    [SerializeField]
+    private GameObject m_hand2;
 
     [SerializeField]
     private float m_baseMovementForce = 1.0f;
     [SerializeField]
     private float m_baseJumpForce = 1.0f;
+    [SerializeField]
+    private float m_weaponHoldDistance = 1.0f;
 
     [Range(0.0f, 1.0f)]
     [SerializeField]
@@ -23,8 +35,12 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private float m_groundedEpsilon = 0.05f;
 
+    [SerializeField]
+    private Vector2 m_weaponHoldOffset = new Vector2(0, 0.15f);
+
     private Rigidbody2D m_rigidbody2D = null;
     private CapsuleCollider2D m_capsuleCollider2D = null;
+    private BaseControls m_controls = null;
 
     private RaycastHit2D m_lastGroundHit;
     private bool m_isGrounded = true;
@@ -34,6 +50,7 @@ public class CharacterController : MonoBehaviour
     {
         m_rigidbody2D = GetComponent<Rigidbody2D>();
         m_capsuleCollider2D = GetComponent<CapsuleCollider2D>();
+        m_controls = GetComponent<BaseControls>();
     }
 
     // Update is called once per frame
@@ -41,7 +58,7 @@ public class CharacterController : MonoBehaviour
     {
         DoGroundCast();
 
-        float horiz = Input.GetAxis("Horizontal");
+        float horiz = m_controls.GetMovement();
         float damp = m_isGrounded ? 1.0f : m_airDampening;
         m_rigidbody2D.AddForce(Vector2.right * m_baseMovementForce * horiz * damp * Time.deltaTime * 60);
 
@@ -75,7 +92,7 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
+        if (m_controls.GetJump())
         {
             bool doJump = m_isGrounded;
 
@@ -84,6 +101,20 @@ public class CharacterController : MonoBehaviour
                 m_rigidbody2D.AddForce(Vector2.up * m_baseJumpForce, ForceMode2D.Impulse);
             }
         }
+
+        Vector2 myPosition = transform.position;
+        var directionToTarget = m_controls.GetTargetPosition() - myPosition;
+        directionToTarget.Normalize();
+
+        var angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
+
+        m_itemHolder.transform.position = myPosition + directionToTarget * m_weaponHoldDistance + m_weaponHoldOffset;
+
+        m_arm1.transform.position = myPosition + directionToTarget * m_weaponHoldDistance * 0.4f + m_weaponHoldOffset;
+        m_arm1.transform.rotation = Quaternion.AngleAxis(angle + 90.0f, Vector3.forward);
+
+        m_hand1.transform.position = m_itemHolder.transform.position;
+        m_hand1.transform.rotation = Quaternion.AngleAxis(angle + 90.0f, Vector3.forward);
 
         m_character.transform.position = transform.position;
     }
