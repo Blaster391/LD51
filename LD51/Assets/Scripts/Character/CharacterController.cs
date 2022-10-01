@@ -40,6 +40,9 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private Vector2 m_weaponHoldOffset = new Vector2(0, 0.15f);
 
+    [SerializeField]
+    private GameObject m_bulletLineRenderer = null;
+
     private Rigidbody2D m_rigidbody2D = null;
     private CapsuleCollider2D m_capsuleCollider2D = null;
     private BaseControls m_controls = null;
@@ -176,15 +179,23 @@ public class CharacterController : MonoBehaviour
 
         Vector2 weaponPosition = m_equippedWeapon.GetFiringPoint();
         var directionToTarget = m_controls.GetTargetPosition() - weaponPosition;
-        
+        Vector2 hitPosition = weaponPosition + directionToTarget * 100.0f;
+
         ContactFilter2D filter = new ContactFilter2D();
         RaycastHit2D[] results = new RaycastHit2D[10];
         var raycastHit = Physics2D.Raycast(weaponPosition, directionToTarget, filter, results);
 
+
         foreach (var hit in results)
         {
-            if (hit.collider == null || hit.collider.gameObject.layer == 10)
+            if (hit.collider == null)
             {
+                break;
+            }
+
+            if (hit.collider.gameObject.layer == 10)
+            {
+                hitPosition = hit.point;
                 break;
             }
 
@@ -192,13 +203,17 @@ public class CharacterController : MonoBehaviour
             Limb hitLimb = hit.collider.GetComponent<Limb>();
             if (hitLimb != null && hitCharacterHealth != null && hitCharacterHealth != m_health)
             {
-
+                hitPosition = hit.point;
                 hitCharacterHealth.TakeDamage(hitLimb, directionToTarget, hit.point, 10.0f);
                 break;
             }
         }
 
         m_equippedWeapon.FireWeapon();
+
+        var lineRendererObject = Instantiate(m_bulletLineRenderer);
+        BulletLineRenderer lineRenderer = lineRendererObject.GetComponent<BulletLineRenderer>();
+        lineRenderer.DrawLine(weaponPosition, hitPosition);
     }
 
     private void TryPickup()

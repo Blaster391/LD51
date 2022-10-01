@@ -1244,6 +1244,7 @@ MonoBehaviour:
   m_airDampening: 0.1
   m_groundedEpsilon: 0.25
   m_weaponHoldOffset: {x: 0, y: 0.15}
+  m_bulletLineRenderer: {fileID: 1466115797409156640, guid: af2218306137f13408cd0b24c0f9457c, type: 3}
 --- !u!1 &982502696267693482
 GameObject:
   m_ObjectHideFlags: 0
