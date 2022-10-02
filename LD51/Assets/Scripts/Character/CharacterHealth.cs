@@ -82,6 +82,11 @@ public class CharacterHealth : MonoBehaviour
 
                 m_body.AddForceAtPosition(hitDirection * hitForce, hitPosition, ForceMode2D.Impulse);
             }
+
+            if(IsPlayer())
+            {
+                GameHelper.GetManager<AudioManager>().PlayerDamage();
+            }
         }
 
         if(!IsAlive())
@@ -115,6 +120,8 @@ public class CharacterHealth : MonoBehaviour
             
             m_gameStateManager.RemoveEnemy(gameObject);
             m_gameStateManager.ResetTimer();
+
+            GameHelper.GetManager<AudioManager>().Kill();
         }
 
  

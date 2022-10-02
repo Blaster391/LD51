@@ -86,6 +86,8 @@ public class GameStateManager : MonoBehaviour
             return;
         }
 
+        GameHelper.GetManager<AudioManager>().LoseGame();
+
         GameOver = true;
         GameHelper.GetManager<ScoreManager>().LoadScoreboard();
     }
@@ -99,6 +101,8 @@ public class GameStateManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("levelCompleted", levelIndex);
         }
+
+        GameHelper.GetManager<AudioManager>().WinGame();
 
         GameHelper.GetManager<ScoreManager>().TrySubmitScore();
     }

@@ -5,6 +5,9 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField]
+    private AudioClip m_weaponClip;
+
+    [SerializeField]
     private bool m_twoHanded = false;
 
     [SerializeField]
@@ -53,6 +56,8 @@ public class Weapon : MonoBehaviour
     {
         m_ammo -= m_shotsPerBurst;
         m_currentDelay = m_delay;
+
+        GameHelper.GetManager<AudioManager>().Shoot(m_weaponClip);
     }
 
     public int GetShotsPerBurst()

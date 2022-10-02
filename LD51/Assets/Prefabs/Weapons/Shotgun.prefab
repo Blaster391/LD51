@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90060435c86ccb14da8dc3499c9fca66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_weaponClip: {fileID: 8300000, guid: ef7780719ff95f24583ecee1a2516030, type: 3}
   m_twoHanded: 1
   m_ammo: 12
   m_fadeTime: 0.2
