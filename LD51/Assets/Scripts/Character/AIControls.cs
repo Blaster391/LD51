@@ -68,6 +68,8 @@ public class AIControls : BaseControls
 
         m_health = GetComponentInParent<CharacterHealth>();
         m_controller = GetComponent<CharacterController>();
+
+        m_walkRight = Random.value > 0.5f;
     }
 
     // Update is called once per frame
