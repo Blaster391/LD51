@@ -47,9 +47,17 @@ public class UIManager : MonoBehaviour
     private CharacterController m_playerController = null;
     private GameStateManager m_gameStateManager = null;
 
+    [SerializeField]
+    private bool m_isCredits = false;
+
     // Start is called before the first frame update
     void Start()
     {
+        if (m_isCredits)
+        {
+            return;
+        }
+
         m_scoreboard.SetActive(false);
 
         m_gameStateManager = GameHelper.GetManager<GameStateManager>();
@@ -60,6 +68,11 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(m_isCredits)
+        {
+            return;
+        }
+
         m_gameOverHolder.SetActive(m_gameStateManager.GameOver);
         m_gameWonHolder.SetActive(m_gameStateManager.GameWon);
         m_nextLevelHolder.SetActive(m_gameStateManager.GameWon);

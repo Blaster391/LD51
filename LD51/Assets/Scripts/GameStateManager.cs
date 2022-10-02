@@ -39,6 +39,9 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private bool m_isCredits = false;
+
     public GameObject Player { get; private set; }
 
     private List<GameObject> m_enemies = new List<GameObject>();
@@ -78,6 +81,11 @@ public class GameStateManager : MonoBehaviour
 
     public void LoseGame()
     {
+        if (m_isCredits)
+        {
+            return;
+        }
+
         GameOver = true;
         GameHelper.GetManager<ScoreManager>().LoadScoreboard();
     }
@@ -105,6 +113,11 @@ public class GameStateManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            return;
+        }
+
+        if(m_isCredits)
+        {
             return;
         }
 

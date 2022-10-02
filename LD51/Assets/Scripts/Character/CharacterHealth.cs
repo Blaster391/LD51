@@ -19,8 +19,16 @@ public class CharacterHealth : MonoBehaviour
 
     private GameStateManager m_gameStateManager = null;
 
+    [SerializeField]
+    private bool m_explodeOnSpawn = false;
+
     private void Awake()
     {
+        if(m_explodeOnSpawn)
+        {
+            return;
+        }
+
         m_gameStateManager = GameHelper.GetManager<GameStateManager>();
 
         if (m_isPlayer)
@@ -30,6 +38,14 @@ public class CharacterHealth : MonoBehaviour
         else
         {
             m_gameStateManager.RegisterEnemy(gameObject);
+        }
+    }
+
+    private void Start()
+    {
+        if (m_explodeOnSpawn)
+        {
+            DestroyHead();
         }
     }
 
@@ -56,7 +72,7 @@ public class CharacterHealth : MonoBehaviour
             m_hp -= hitLimb.GetDamageFromHit();
             if (m_hp <= 0)
             {
-                if(!IsPlayer())
+                if(!IsPlayer() && !m_explodeOnSpawn)
                 {
                     m_gameStateManager.AddScore(hitLimb.GetScore() * m_gameStateManager.TimeRemaining);
                 }
@@ -85,7 +101,12 @@ public class CharacterHealth : MonoBehaviour
         RigidbodyConstraints2D constraints = new RigidbodyConstraints2D();
         m_body.constraints = constraints;
 
-        if(m_isPlayer)
+        if (m_explodeOnSpawn)
+        {
+            return;
+        }
+
+        if (m_isPlayer)
         {
             m_gameStateManager.LoseGame();
         }
@@ -96,7 +117,10 @@ public class CharacterHealth : MonoBehaviour
             m_gameStateManager.ResetTimer();
         }
 
+ 
         Camera.main.gameObject.GetComponent<ScreenFXManager>().TriggerScreenshot();
+        
+
     }
 
     public void DestroyHead()

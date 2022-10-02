@@ -63,6 +63,11 @@ public class AIControls : BaseControls
     void Start()
     {
         m_lastUpdatedPlayerLocation = Random.value * m_idleReactionTime;
+        if(GameHelper.GetManager<GameStateManager>().Player == null)
+        {
+            return;
+        }
+
         m_playerHealth = GameHelper.GetManager<GameStateManager>().Player.GetComponent<CharacterHealth>();
         m_playerController = GameHelper.GetManager<GameStateManager>().PlayerController;
 
