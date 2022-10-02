@@ -9,8 +9,20 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 81142f70cea0d7b48ae9344a0b1bfa99
   - enabled: 1
-    path: Assets/Scenes/CharacterTest.unity
-    guid: 224859e46486d8e4b8300155635b9d8b
+    path: Assets/Scenes/Tutorial.unity
+    guid: c7c90e99b5fa4cc40b1f325179014755
+  - enabled: 1
+    path: Assets/Scenes/Tutorial2.unity
+    guid: 2be3dd814eb4191489e7b7bbb954c7f3
+  - enabled: 1
+    path: Assets/Scenes/Tiers.unity
+    guid: 9a02fab0dc27b174b8816833e712dc86
+  - enabled: 1
+    path: Assets/Scenes/DroppingIn.unity
+    guid: 0a742969a1cd9ce4eb36fb5be3a6407e
+  - enabled: 1
+    path: Assets/Scenes/RatRace.unity
+    guid: b0a016616b798d14584cae60e009ec85
   - enabled: 1
     path: Assets/Scenes/Credits.unity
     guid: 4c5708199ff2ee749abeb223c9210ee6
