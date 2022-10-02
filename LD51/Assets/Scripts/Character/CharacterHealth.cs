@@ -95,6 +95,8 @@ public class CharacterHealth : MonoBehaviour
             m_gameStateManager.RemoveEnemy(gameObject);
             m_gameStateManager.ResetTimer();
         }
+
+        Camera.main.gameObject.GetComponent<ScreenFXManager>().TriggerScreenshot();
     }
 
     public void DestroyHead()
