@@ -1276,7 +1276,8 @@ MonoBehaviour:
   m_baseJumpForce: 16
   m_weaponHoldDistance: 0.7
   m_throwForce: 12
-  m_airDampening: 0.25
+  m_maxSpeed: 7
+  m_airDampening: 0.5
   m_groundedEpsilon: 0.25
   m_weaponHoldOffset: {x: 0, y: 0.15}
   m_bulletLineRenderer: {fileID: 1466115797409156640, guid: af2218306137f13408cd0b24c0f9457c, type: 3}
@@ -2094,6 +2095,7 @@ MonoBehaviour:
   m_body: {fileID: 982502696003287612}
   m_controller: {fileID: 982502696253122322}
   m_isPlayer: 0
+  m_explodeOnSpawn: 0
 --- !u!1 &982502697171266934
 GameObject:
   m_ObjectHideFlags: 0

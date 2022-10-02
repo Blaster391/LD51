@@ -32,6 +32,9 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private float m_throwForce = 10.0f;
 
+    [SerializeField]
+    private float m_maxSpeed = 10.0f;
+
     [Range(0.0f, 1.0f)]
     [SerializeField]
     private float m_airDampening = 0.45f;
@@ -113,6 +116,10 @@ public class CharacterController : MonoBehaviour
         float horiz = m_controls.GetMovement();
         float damp = m_isGrounded ? 1.0f : m_airDampening;
         m_rigidbody2D.AddForce(Vector2.right * m_baseMovementForce * horiz * damp * Time.deltaTime * 60);
+
+        Vector2 velocity = m_rigidbody2D.velocity;
+        velocity.x = Mathf.Clamp(velocity.x, -m_maxSpeed, m_maxSpeed);
+        m_rigidbody2D.velocity = velocity;
 
         if (Mathf.Abs(horiz) < 0.1f)
         {
