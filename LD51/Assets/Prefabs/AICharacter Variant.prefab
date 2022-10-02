@@ -39,6 +39,38 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 982502695573710368, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 05f3885c267762b49b49a04918fcde6f, type: 3}
+    - target: {fileID: 982502695833370725, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 05f3885c267762b49b49a04918fcde6f, type: 3}
+    - target: {fileID: 982502695835780272, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d7a01c04e202c574494c8afabae1076d, type: 3}
+    - target: {fileID: 982502696003287611, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 552e255ae0f4761469ded20b59ce9f4a, type: 3}
+    - target: {fileID: 982502696240972808, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7167ed6736cc7a249bfe4826792904bc, type: 3}
+    - target: {fileID: 982502696267693484, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 192585348f16ac846b586917cfce1018, type: 3}
+    - target: {fileID: 982502696381388804, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7167ed6736cc7a249bfe4826792904bc, type: 3}
+    - target: {fileID: 982502696926633718, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d7a01c04e202c574494c8afabae1076d, type: 3}
     - target: {fileID: 982502697168208941, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
       propertyPath: m_Name
       value: AICharacter Variant
@@ -87,6 +119,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 982502697357144431, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 72bc44ab7a681df4693e72ec07f47955, type: 3}
+    - target: {fileID: 982502697541202195, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 13ab60bc9d95d864cbede113be953518, type: 3}
+    - target: {fileID: 982502697549002865, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 72bc44ab7a681df4693e72ec07f47955, type: 3}
     m_RemovedComponents: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 982502696267693483, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}

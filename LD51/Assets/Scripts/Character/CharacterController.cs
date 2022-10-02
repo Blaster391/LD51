@@ -96,6 +96,12 @@ public class CharacterController : MonoBehaviour
 
         if(!m_gameStateManager.GameActive && m_health.IsPlayer())
         {
+            if (m_movingDirection != 0)
+            {
+                m_animator.Play("Idle");
+                m_movingDirection = 0;
+            }
+
             DropWeapon();
             m_character.transform.position = transform.position;
             m_body.transform.position = transform.position;
@@ -304,7 +310,7 @@ public class CharacterController : MonoBehaviour
         var directionToTarget = m_controls.GetTargetPosition() - myPosition;
         directionToTarget.Normalize();
 
-        Vector2 upwardsForce = Vector2.up * m_throwForce * 0.25f;
+        Vector2 upwardsForce = Vector2.up * m_throwForce * 0.2f;
 
         m_equippedWeapon.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         m_equippedWeapon.GetComponent<Rigidbody2D>().AddForce(directionToTarget * m_throwForce + upwardsForce, ForceMode2D.Impulse);
