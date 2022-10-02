@@ -165,7 +165,7 @@ MonoBehaviour:
   m_eyeObject: {fileID: 1611940795540917668}
   m_accuracy: 1
   m_playerLocationUpdateTime: 1
-  m_patrol: 0
+  m_patrol: 1
 --- !u!4 &6846303648138946567 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 982502696267693483, guid: 043b0dd43565ffe44994e74b2ad458bc, type: 3}

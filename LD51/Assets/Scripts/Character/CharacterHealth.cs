@@ -64,17 +64,31 @@ public class CharacterHealth : MonoBehaviour
         return m_hp;
     }
 
-    public void TakeDamage(Limb hitLimb, Vector2 hitDirection, Vector2 hitPosition, float hitForce)
+    public void TakeDamage(Limb hitLimb, Vector2 hitDirection, Vector2 hitPosition, float hitForce, bool thrownWeapon = false)
     {
         bool justKilled = IsAlive();
         if (IsAlive())
         {
-            m_hp -= hitLimb.GetDamageFromHit();
+            if(!thrownWeapon)
+            {
+                m_hp -= hitLimb.GetDamageFromHit();
+            }
+            else
+            {
+                m_hp = 0;
+            }
+
             if (m_hp <= 0)
             {
                 if(!IsPlayer() && !m_explodeOnSpawn)
                 {
-                    m_gameStateManager.AddScore(hitLimb.GetScore() * m_gameStateManager.TimeRemaining);
+                    int throwMultiplier = 1;
+                    if(thrownWeapon)
+                    {
+                        throwMultiplier = 2;
+                    }
+
+                    m_gameStateManager.AddScore(hitLimb.GetScore() * m_gameStateManager.TimeRemaining * throwMultiplier);
                 }
 
                 hitLimb.OnKilled();

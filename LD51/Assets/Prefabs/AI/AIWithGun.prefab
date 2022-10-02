@@ -41,6 +41,18 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 8652106953431543529}
     m_Modifications:
+    - target: {fileID: 682818127, guid: faaf802dd00d4af40a6fb94566b3469a, type: 3}
+      propertyPath: m_patrol
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 682818127, guid: faaf802dd00d4af40a6fb94566b3469a, type: 3}
+      propertyPath: m_accuracy
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 682818127, guid: faaf802dd00d4af40a6fb94566b3469a, type: 3}
+      propertyPath: m_playerLocationUpdateTime
+      value: 0.75
+      objectReference: {fileID: 0}
     - target: {fileID: 6846303648128545466, guid: faaf802dd00d4af40a6fb94566b3469a, type: 3}
       propertyPath: m_startingWeapon
       value: 

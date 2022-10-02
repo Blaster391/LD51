@@ -1694,7 +1694,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3872091790973432913, guid: 0368bb43b64bd6f4b9de2cd8e118ba93, type: 3}
       propertyPath: m_levelName
-      value: Tutorial2
+      value: DroppingIn
       objectReference: {fileID: 0}
     - target: {fileID: 3872091790973432916, guid: 0368bb43b64bd6f4b9de2cd8e118ba93, type: 3}
       propertyPath: m_Name
@@ -1744,6 +1744,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6043064059246427287, guid: 0368bb43b64bd6f4b9de2cd8e118ba93, type: 3}
+      propertyPath: m_musicClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 6e98793e661d7b5479d7cec409e0f4d5, type: 3}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 0368bb43b64bd6f4b9de2cd8e118ba93, type: 3}

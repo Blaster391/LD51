@@ -110,7 +110,7 @@ public class Weapon : MonoBehaviour
             Limb hitLimb = collision.collider.GetComponent<Limb>();
             if(hitLimb != null && hitCharacterHealth.gameObject != m_thrownBy)
             {
-                hitCharacterHealth.TakeDamage(hitLimb, weaponVelocity, collision.GetContact(0).point, 2.0f);
+                hitCharacterHealth.TakeDamage(hitLimb, weaponVelocity, collision.GetContact(0).point, 4.0f, true);
                 m_thrownBy = null;
             }
         }
