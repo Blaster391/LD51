@@ -30,6 +30,9 @@ EditorBuildSettings:
     path: Assets/Scenes/RatRace.unity
     guid: b0a016616b798d14584cae60e009ec85
   - enabled: 1
+    path: Assets/Scenes/Finale.unity
+    guid: ef440db47dfca82438e14aaa1f7a9208
+  - enabled: 1
     path: Assets/Scenes/Credits.unity
     guid: 4c5708199ff2ee749abeb223c9210ee6
   m_configObjects: {}

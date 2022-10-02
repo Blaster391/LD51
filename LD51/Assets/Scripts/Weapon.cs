@@ -100,7 +100,7 @@ public class Weapon : MonoBehaviour
             Vector2 weaponVelocity = GetComponent<Rigidbody2D>().velocity;
             float throwSpeed = weaponVelocity.magnitude;
 
-            if(throwSpeed < 0.05f)
+            if(throwSpeed < 0.025f)
             {
                 m_thrownBy = null;
                 return;
@@ -131,6 +131,10 @@ public class Weapon : MonoBehaviour
         {
             m_fadeRemaining = 0.0f;
             GetComponent<Collider2D>().isTrigger = false;
+
+            Vector2 weaponVelocity = GetComponent<Rigidbody2D>().velocity;
+            hitCharacterHealth.TakeDamage(hitLimb, weaponVelocity, transform.position, 4.0f, true);
+            m_thrownBy = null;
             return;
         }
     }

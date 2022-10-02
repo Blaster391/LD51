@@ -234,7 +234,7 @@ public class CharacterController : MonoBehaviour
             Vector2 hitPosition = weaponPosition + directionToTarget * 100.0f;
 
             ContactFilter2D filter = new ContactFilter2D();
-            RaycastHit2D[] results = new RaycastHit2D[10];
+            RaycastHit2D[] results = new RaycastHit2D[20];
             var raycastHit = Physics2D.Raycast(weaponPosition, directionToTarget, filter, results);
 
 
@@ -352,7 +352,7 @@ public class CharacterController : MonoBehaviour
         }
 
         m_groundWeapon = null;
-        hits = Physics2D.CircleCastAll(m_rigidbody2D.position + Vector2.up * 2.0f, capsuleBounds.extents.x * 4.0f, Vector2.down, 4.0f);
+        hits = Physics2D.CircleCastAll(m_rigidbody2D.position + Vector2.up * 2.0f, capsuleBounds.extents.x * 5.0f, Vector2.down, 4.0f);
         foreach (var hit in hits)
         {
             if (hit.collider.gameObject.layer == 11)

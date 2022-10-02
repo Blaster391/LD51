@@ -14,6 +14,7 @@ public class ScoreManager : MonoBehaviour
 
     bool m_scoreSubmitting = false;
     bool m_highscoresAcquired = false;
+    private int m_score = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -24,8 +25,14 @@ public class ScoreManager : MonoBehaviour
 
     public int GetScore()
     {
+        if(m_score > 0)
+        {
+            return m_score;
+        }
+
         float totalScore = (m_stateManager.Score * 100.0f) / m_stateManager.TimeInLevel;
-        return Mathf.RoundToInt(totalScore);
+        m_score = Mathf.RoundToInt(totalScore);
+        return m_score;
     }
 
     public void TrySubmitScore()
