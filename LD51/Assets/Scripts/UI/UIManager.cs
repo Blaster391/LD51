@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -26,6 +27,10 @@ public class UIManager : MonoBehaviour
     private GameObject m_gameWonHolder;
     [SerializeField]
     private TMP_Text m_timeRemaining;
+    [SerializeField]
+    private GameObject m_nextLevelHolder;
+    [SerializeField]
+    private GameObject m_timeRemainingHolder;
 
     [SerializeField]
     private GameObject m_scoreboard;
@@ -57,14 +62,15 @@ public class UIManager : MonoBehaviour
     {
         m_gameOverHolder.SetActive(m_gameStateManager.GameOver);
         m_gameWonHolder.SetActive(m_gameStateManager.GameWon);
+        m_nextLevelHolder.SetActive(m_gameStateManager.GameWon);
 
-        if(!m_gameStateManager.GameWon && !m_gameStateManager.GameOver)
+        if (!m_gameStateManager.GameWon && !m_gameStateManager.GameOver)
         {
             m_timeRemaining.text = m_gameStateManager.TimeRemaining.ToString();
         }
         else
         {
-            m_timeRemaining.gameObject.SetActive(false);
+            m_timeRemainingHolder.gameObject.SetActive(false);
         }    
         
         int bulletCount = m_playerController != null ? m_playerController.GetBulletCount() : 0;
@@ -100,6 +106,11 @@ public class UIManager : MonoBehaviour
                 m_health.Add(newLife);
             }
         }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            MainMenu();
+        }
     }
 
     public void ShowScoreboard(List<ScoreboardCore.Data.ScoreResult> scores)
@@ -118,8 +129,16 @@ public class UIManager : MonoBehaviour
                 m_names[i].text = "";
                 m_scores[i].text = "";
             }
-
-
         }
+    }
+
+    public void NextLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 }
