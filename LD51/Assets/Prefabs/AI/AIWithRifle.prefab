@@ -118,7 +118,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1045625491415652835, guid: 0f3cd46300010ed4e9090af1ee8eff98, type: 3}
       propertyPath: m_accuracy
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1045625491415652835, guid: 0f3cd46300010ed4e9090af1ee8eff98, type: 3}
       propertyPath: m_attackDelay

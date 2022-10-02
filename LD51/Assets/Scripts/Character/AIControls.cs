@@ -75,6 +75,17 @@ public class AIControls : BaseControls
         m_controller = GetComponent<CharacterController>();
 
         m_walkRight = Random.value > 0.5f;
+
+        Vector2 currentPos = transform.position;
+        if(m_walkRight)
+        {
+            m_targetPosition = currentPos + Vector2.right * 5.0f;
+        }
+        else
+        {
+            m_targetPosition = currentPos - Vector2.right * 5.0f;
+        }
+
     }
 
     // Update is called once per frame

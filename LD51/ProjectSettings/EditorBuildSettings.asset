@@ -15,11 +15,17 @@ EditorBuildSettings:
     path: Assets/Scenes/Tutorial2.unity
     guid: 2be3dd814eb4191489e7b7bbb954c7f3
   - enabled: 1
+    path: Assets/Scenes/Collateral.unity
+    guid: 663558b9ad570f6418f01b6842acffe7
+  - enabled: 1
     path: Assets/Scenes/Tiers.unity
     guid: 9a02fab0dc27b174b8816833e712dc86
   - enabled: 1
     path: Assets/Scenes/DroppingIn.unity
     guid: 0a742969a1cd9ce4eb36fb5be3a6407e
+  - enabled: 1
+    path: Assets/Scenes/TheClimb.unity
+    guid: d96bfd1d9a97a0c4689a0c1687c4656c
   - enabled: 1
     path: Assets/Scenes/RatRace.unity
     guid: b0a016616b798d14584cae60e009ec85

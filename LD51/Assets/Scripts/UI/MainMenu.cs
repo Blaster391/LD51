@@ -27,6 +27,8 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 60;
+
         if (PlayerPrefs.HasKey("levelCompleted"))
         {
             m_highestCompletedLevel = PlayerPrefs.GetInt("levelCompleted");

@@ -38,6 +38,7 @@ public class ScoreManager : MonoBehaviour
         string playerName = PlayerPrefs.GetString("name");
         if(string.IsNullOrEmpty(playerName))
         {
+            LoadScoreboard();
             return;
         }
 
