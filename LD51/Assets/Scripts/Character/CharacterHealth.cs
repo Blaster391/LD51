@@ -134,7 +134,7 @@ public class CharacterHealth : MonoBehaviour
     {
         while(IsAlive())
         {
-            TakeDamage(m_head, Vector2.up, m_head.transform.position, 10.0f);
+            TakeDamage(m_head, Vector2.up, m_head.transform.position, 25.0f);
         }
     }
 }

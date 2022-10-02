@@ -84,8 +84,6 @@ public class AudioManager : MonoBehaviour
     {
         m_ostSource.Stop();
         m_gameOverSource.Stop();
-        m_shotSource.Stop();
-        m_killSource.Stop();
     }
 
 }

@@ -31,6 +31,10 @@ public class MainMenu : MonoBehaviour
         {
             m_highestCompletedLevel = PlayerPrefs.GetInt("levelCompleted");
         }
+        if (PlayerPrefs.HasKey("name"))
+        {
+            m_playerName.text = PlayerPrefs.GetString("name");
+        }
     }
 
     // Update is called once per frame

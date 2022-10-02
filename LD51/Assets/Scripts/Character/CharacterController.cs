@@ -310,7 +310,7 @@ public class CharacterController : MonoBehaviour
         var directionToTarget = m_controls.GetTargetPosition() - myPosition;
         directionToTarget.Normalize();
 
-        Vector2 upwardsForce = Vector2.up * m_throwForce * 0.2f;
+        Vector2 upwardsForce = Vector2.up * m_throwForce * 0.1f;
 
         m_equippedWeapon.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         m_equippedWeapon.GetComponent<Rigidbody2D>().AddForce(directionToTarget * m_throwForce + upwardsForce, ForceMode2D.Impulse);
