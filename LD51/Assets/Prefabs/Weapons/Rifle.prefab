@@ -103,7 +103,7 @@ MonoBehaviour:
   m_twoHanded: 1
   m_ammo: 20
   m_fadeTime: 0.1
-  m_spread: 0.1
+  m_spread: 0.05
   m_shotsPerBurst: 1
   m_delay: 0.25
   m_isAutomatic: 1

@@ -31,7 +31,8 @@ public class UIManager : MonoBehaviour
     private GameObject m_nextLevelHolder;
     [SerializeField]
     private GameObject m_timeRemainingHolder;
-
+    [SerializeField]
+    private GameObject m_restartHolder;
     [SerializeField]
     private GameObject m_scoreHolder;
     [SerializeField]
@@ -82,8 +83,9 @@ public class UIManager : MonoBehaviour
         m_gameWonHolder.SetActive(m_gameStateManager.GameWon);
         m_nextLevelHolder.SetActive(m_gameStateManager.GameWon);
         m_scoreHolder.SetActive(m_gameStateManager.GameWon);
+        m_restartHolder.SetActive(m_gameStateManager.GameOver);
 
-        if(m_gameStateManager.GameWon)
+        if (m_gameStateManager.GameWon)
         {
             m_score.text = GameHelper.GetManager<ScoreManager>().GetScore().ToString();
         }
