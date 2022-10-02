@@ -11,6 +11,9 @@ public class Limb : MonoBehaviour
     public virtual int GetScore() { return 1; }
     public virtual void OnKilled()
     {
-        
+        foreach(var emitter in m_emitters)
+        {
+            emitter.Activate();
+        }
     }
 }

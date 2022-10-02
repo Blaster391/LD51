@@ -194,7 +194,7 @@ public class CharacterController : MonoBehaviour
         }
         else
         {
-            if (m_controls.GetShoot())
+            if (m_controls.GetThrow())
             {
                 TryPickup();
             }
